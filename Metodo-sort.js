@@ -10,7 +10,7 @@ function metodoBurbuja (vec) {
   let aux = 0;
   let comparaciones = 0;
   for (let i = 1; i < vec.length; i++) {
-    for (let j = 0; j < vec.length - 1; j++) {
+    for (let j = 0; j < vec.length - i; j++) {
       comparaciones++;
       if (vec[j] > vec[j + 1]) {
         aux = vec[j];
