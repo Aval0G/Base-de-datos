@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  
+    <label for="txtNombre">Nombre:</label> <input id="Nombre" type="text">
+    <label for="txtPrecio">Precio: $</label> <input id="Precio" type="number">
+    <label for="txtCantidad">Cantidad:</label> <input id="Cantidad" type="number">
+    <label for="txtCodigo">Codigo:</label> <input id="Codigo" type="number">
+    <button id="btnAdd">Agregar producto</button>
+    <button type="reset" id="btnClean">Limpiar</button>
+    <div id=""></div>
+    <div id="detalles"></div>
+
+<script>
+    class Producto {
+  constructor (codigo, nombre, precio, cantidad) {
+    this.codigo = codigo;
+    this.nombre = nombre;
+    this.precio = precio;
+    this.cantidad = cantidad
+  }
+
+  info () {
+    return `El producto ${this.nombre} tiene un precio de ${this.precio} y hay ${this.cantidad} en stock`;
+  }
+  infoHtml() {
+    return `<div class="producto">
+              <h2>${this.nombre}</h2>
+              <p>Precio: ${this.precio}</p>
+              <p>Stock: ${this.cantidad}</p>
+            </div>`;  
+  }
+}
+
+class Inventario {
+  constructor () {
+    this.productos = [];
+  }
+
+  agregar (producto) {
+    this.productos.push(producto);
+  }
+
+  listar () {
+    let html = "";
+    for (let producto of this.productos) {
+      html += producto.infoHtml();
+    }
+    return html;
+  }
+  buscar(codigo) {
+    for (let i = 0; i < this.productos.length; i++) {
+      if (this.productos[i].codigo == codigo) {
+        return this.productos[i];
+      } else {
+        return null;
+      }
+    }
+  }
+  eliminar(codigo) {
+    for (let i = 0; i < this.productos.length; i++) {
+      if (this.productos[i].codigo == codigo) {
+        let aux= this.productos[i];
+        let index = i;
+      }
+      this.productos[i] = this.productos[i+1];
+      this.productos[i+1] = aux;  
+    }
+  }
+}
+
+let inventario = new Inventario();
+
+const btnAdd = document.getElementById("btnAdd");
+btnAdd.addEventListener("click", () => {
+    let nombre = document.getElementById("Nombre").value;
+    let precio = document.getElementById("Precio").value;
+    let cantidad = document.getElementById("Cantidad").value;
+    let codigo = document.getElementById("Codigo").value;
+    let producto = new Producto(codigo, nombre, precio, cantidad);
+    inventario.agregar(producto);
+    document.getElementById("detalles").innerHTML = producto.infoHtml();
+  } );
+
+</script>
+</body>
+</html>
