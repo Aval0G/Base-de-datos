@@ -17,6 +17,7 @@
     <button id="btnDelete">Eliminar producto</button>
     <button id="btnList">Listar productos</button>
     <button id="btnModify">Modificar producto</button>
+    <button id="btnSearch">Buscar producto</button>
     <div id=""></div>
     <div id="detalles"></div>
 
@@ -37,6 +38,7 @@
               <h2>${this.nombre}</h2>
               <p>Precio: ${this.precio}</p>
               <p>Stock: ${this.cantidad}</p>
+              <p>Codigo: ${this.codigo}</p>
             </div>`;  
   }
 }
@@ -133,7 +135,7 @@ btnAdd.addEventListener("click", () => {
       document.getElementById("detalles").innerHTML = producto.infoHtml();
     } 
     else {
-      alert("El codigo ya existe");
+      document.getElementById("detalles").innerHTML = "<h2>El producto ya existe</h2>";
     } 
   } );
 
@@ -149,7 +151,8 @@ btnClean.addEventListener("click", () => {
 const btnDelete = document.getElementById("btnDelete");
 btnDelete.addEventListener("click", () => {
     let codigo = document.getElementById("Codigo").value;
-    if (inventario.eliminar(codigo))
+    let eliminar = inventario.eliminar(codigo);
+    if (eliminar == true)
       document.getElementById("detalles").innerHTML = "<h2>Producto Elimnado</h2>";
     else
       document.getElementById("detalles").innerHTML = "<h2>El producto no existe</h2>";
@@ -166,8 +169,19 @@ btnModify.addEventListener("click", () => {
     let precio = document.getElementById("Precio").value;
     let cantidad = document.getElementById("Cantidad").value;
     let codigo = document.getElementById("Codigo").value;
-    if (inventario.modificar(nombre, precio, cantidad, codigo))
-      document.getElementById("detalles").innerHTML = "<h2>Producto modificado</h2>";
+    let modificacion = inventario.modificar(nombre, precio, cantidad, codigo)
+    if (modificacion == true)
+      document.getElementById("detalles").innerHTML = "<h2>Producto modificado</h2>" + inventario.buscarProducto(codigo).infoHtml();
+    else
+      document.getElementById("detalles").innerHTML = "<h2>El producto no existe</h2>"
+  } );
+
+const btnSearch = document.getElementById("btnSearch");
+btnSearch.addEventListener("click", () => {
+    let codigo = document.getElementById("Codigo").value;
+    let producto = inventario.buscarProducto(codigo);
+    if (producto != null)
+      document.getElementById("detalles").innerHTML = producto.infoHtml();
     else
       document.getElementById("detalles").innerHTML = "<h2>El producto no existe</h2>"
   } );
