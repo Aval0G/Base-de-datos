@@ -14,6 +14,9 @@
     <label for="txtCodigo">Codigo:</label> <input id="Codigo" type="number">
     <button id="btnAdd">Agregar producto</button>
     <button type="reset" id="btnClean">Limpiar</button>
+    <button id="btnDelete">Eliminar producto</button>
+    <button id="btnList">Listar productos</button>
+    <button id="btnModify">Modificar producto</button>
     <div id=""></div>
     <div id="detalles"></div>
 
@@ -43,34 +46,76 @@ class Inventario {
     this.productos = [];
   }
 
+  checarCodigo(codigo){
+    for (let i = 0; i < this.productos.length; i++) {
+      if (this.productos[i].codigo == codigo) {
+        return true;
+    }
+  }
+  return false;
+  }
+
+  buscarIndex(codigo){
+    for (let i = 0; i < this.productos.length; i++) {
+      if (this.productos[i].codigo == codigo) {
+        return i;
+      }
+    }
+    return null;
+  }
+
+
   agregar (producto) {
-    this.productos.push(producto);
+    if (!this.checarCodigo(producto.codigo)) {
+      this.productos.push(producto);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   listar () {
     let html = "";
-    for (let producto of this.productos) {
-      html += producto.infoHtml();
+    for (let i = 0; i < this.productos.length; i++) {
+      html += this.productos[i].infoHtml();
     }
     return html;
   }
-  buscar(codigo) {
+
+  buscarProducto(codigo) {
     for (let i = 0; i < this.productos.length; i++) {
       if (this.productos[i].codigo == codigo) {
         return this.productos[i];
-      } else {
-        return null;
       }
     }
+    return null;
   }
+
   eliminar(codigo) {
-    for (let i = 0; i < this.productos.length; i++) {
-      if (this.productos[i].codigo == codigo) {
-        let aux= this.productos[i];
-        let index = i;
-      }
+    if (this.checarCodigo(codigo)) {
+    let aux = this.buscarProducto(codigo);
+    let index = this.buscarIndex(codigo);
+    for (let i = index; i < this.productos.length; i++) {
       this.productos[i] = this.productos[i+1];
-      this.productos[i+1] = aux;  
+    }
+    this.productos[this.productos.length-1] = aux;
+    this.productos.pop();
+    return true;
+    } else {
+      return false;
+    }
+  }
+
+  modificar(nombre, precio, cantidad, codigo) {
+      if (this.checarCodigo(codigo)) {
+        let i = this.buscarIndex(codigo);
+        this.productos[i].nombre = nombre;
+        this.productos[i].precio = precio;
+        this.productos[i].cantidad = cantidad;
+        return true;
+    } 
+    else {
+      return false;
     }
   }
 }
@@ -84,10 +129,48 @@ btnAdd.addEventListener("click", () => {
     let cantidad = document.getElementById("Cantidad").value;
     let codigo = document.getElementById("Codigo").value;
     let producto = new Producto(codigo, nombre, precio, cantidad);
-    inventario.agregar(producto);
-    document.getElementById("detalles").innerHTML = producto.infoHtml();
+    if (inventario.agregar(producto)){
+      document.getElementById("detalles").innerHTML = producto.infoHtml();
+    } 
+    else {
+      alert("El codigo ya existe");
+    } 
   } );
 
+const btnClean = document.getElementById("btnClean");
+btnClean.addEventListener("click", () => {
+    document.getElementById("Nombre").value = "";
+    document.getElementById("Precio").value = "";
+    document.getElementById("Cantidad").value = "";
+    document.getElementById("Codigo").value = "";
+    document.getElementById("detalles").innerHTML = "";
+  } );
+
+const btnDelete = document.getElementById("btnDelete");
+btnDelete.addEventListener("click", () => {
+    let codigo = document.getElementById("Codigo").value;
+    if (inventario.eliminar(codigo))
+      document.getElementById("detalles").innerHTML = "<h2>Producto Elimnado</h2>";
+    else
+      document.getElementById("detalles").innerHTML = "<h2>El producto no existe</h2>";
+  } );
+
+const btnList = document.getElementById("btnList");
+btnList.addEventListener("click", () => {
+    document.getElementById("detalles").innerHTML = inventario.listar();
+  } );
+
+const btnModify = document.getElementById("btnModify");
+btnModify.addEventListener("click", () => {
+    let nombre = document.getElementById("Nombre").value;
+    let precio = document.getElementById("Precio").value;
+    let cantidad = document.getElementById("Cantidad").value;
+    let codigo = document.getElementById("Codigo").value;
+    if (inventario.modificar(nombre, precio, cantidad, codigo))
+      document.getElementById("detalles").innerHTML = "<h2>Producto modificado</h2>";
+    else
+      document.getElementById("detalles").innerHTML = "<h2>El producto no existe</h2>"
+  } );
 </script>
 </body>
 </html>
