@@ -68,31 +68,6 @@ class Inventario {
     return null;
   }
 
-  agregar (producto) {
-    if (!this.checarCodigo(producto.codigo)) {
-      this.productos.push(producto);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  listar () {
-    let html = '';
-    for (let i = 0; i < this.productos.length; i++) {
-      html += this.productos[i].infoHtml();
-    }
-    return html;
-  }
-
-  listarInverso () {
-    let html = '';
-    for (let i = this.productos.length - 1; i >= 0; i--) {
-      html += this.productos[i].infoHtml();
-    }
-    return html;
-  }
-
   buscarProducto (codigo) {
     for (let i = 0; i < this.productos.length; i++) {
       if (this.productos[i].codigo === codigo) {
@@ -100,6 +75,15 @@ class Inventario {
       }
     }
     return null;
+  }
+
+  agregar (producto) {
+    if (!this.checarCodigo(producto.codigo)) {
+      this.productos.push(producto);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   eliminar (codigo) {
@@ -128,6 +112,22 @@ class Inventario {
       return false;
     }
   }
+  listar () {
+    let html = '';
+    for (let i = 0; i < this.productos.length; i++) {
+      html += this.productos[i].infoHtml();
+    }
+    return html;
+  }
+
+  listarInverso () {
+    let html = '';
+    for (let i = this.productos.length - 1; i >= 0; i--) {
+      html += this.productos[i].infoHtml();
+    }
+    return html;
+  }
+
 }
 
 const inventario = new Inventario();
@@ -139,11 +139,8 @@ btnAdd.addEventListener('click', () => {
   const cantidad = document.getElementById('Cantidad').value;
   const codigo = document.getElementById('Codigo').value;
   const producto = new Producto(codigo, nombre, precio, cantidad);
-  if (inventario.agregar(producto)) {
-    document.getElementById('detalles').innerHTML = producto.infoHtml();
-  } else {
-    document.getElementById('detalles').innerHTML = '<h2>El producto con ese codigo ya existe</h2>';
-  }
+  if (inventario.agregar(producto)) document.getElementById('detalles').innerHTML = producto.infoHtml();
+  else document.getElementById('detalles').innerHTML = '<h2>El producto con ese codigo ya existe</h2>';
 });
 
 const btnClean = document.getElementById('btnClean');
