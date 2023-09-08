@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <!--Elaborado por Aldo Eduardo Valdez Gutierrez-->
 </head>
 <body>
-  
     <label for="txtNombre">Nombre:</label> <input id="Nombre" type="text">
     <label for="txtPrecio">Precio: $</label> <input id="Precio" type="number">
     <label for="txtCantidad">Cantidad:</label> <input id="Cantidad" type="number">
@@ -112,6 +112,7 @@ class Inventario {
       return false;
     }
   }
+  
   listar () {
     let html = '';
     for (let i = 0; i < this.productos.length; i++) {
