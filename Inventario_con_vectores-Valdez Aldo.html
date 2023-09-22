@@ -78,29 +78,21 @@ class Inventario {
   }
 
   agregar(producto) {
-  if (!this.checarCodigo(producto.codigo)) {
-    if (this.productos.length === 0) {
+    if (!this.checarCodigo(producto.codigo)) {
+      let i = 0;
+      while (i < this.productos.length && producto.codigo >= this.productos[i].codigo) {
+        i++; // encuentra la posicion
+      }
       this.productos.push(producto);
+      for (let j = this.productos.length - 1; j > i; j--) { // recorre todo hasta la i
+        this.productos[j] = this.productos[j - 1];
+      }
+      this.productos[i] = producto; // inserta el producto en la posicion i
+      return true;
     } else {
-      let pos = 0;
-      do {
-        if (producto.codigo < this.productos[pos].codigo) {
-          for (let i = this.productos.length - 1; i >= pos; i--) {
-            this.productos[i + 1] = this.productos[i];
-          }
-          this.productos[pos] = producto;
-          return true;
-        } else {
-          pos++;
-        }
-      } while (pos < this.productos.length);
-      this.productos.push(producto);
+      return false;
     }
-    return true;
-  } else {
-    return false;
   }
-}
 
   eliminar (codigo) {
     const aux = this.buscarProducto(codigo);
@@ -152,9 +144,9 @@ const inventario = new Inventario();
 const btnAdd = document.getElementById('btnAdd');
 btnAdd.addEventListener('click', () => {
   const nombre = document.getElementById('Nombre').value;
-  const precio = document.getElementById('Precio').value;
-  const cantidad = document.getElementById('Cantidad').value;
-  const codigo = document.getElementById('Codigo').value;
+  const precio = parseFloat(document.getElementById('Precio').value);
+  const cantidad = parseInt(document.getElementById('Cantidad').value);
+  const codigo = parseInt(document.getElementById('Codigo').value);
   const producto = new Producto(codigo, nombre, precio, cantidad);
   if (inventario.agregar(producto)) document.getElementById('detalles').innerHTML = producto.infoHtml();
   else document.getElementById('detalles').innerHTML = '<h2>El producto con ese codigo ya existe</h2>';
@@ -171,7 +163,7 @@ btnClean.addEventListener('click', () => {
 
 const btnDelete = document.getElementById('btnDelete');
 btnDelete.addEventListener('click', () => {
-  const codigo = document.getElementById('Codigo').value;
+  const codigo = parseInt(document.getElementById('Codigo').value);
   const eliminar = inventario.eliminar(codigo);
   if (eliminar === true) document.getElementById('detalles').innerHTML = '<h2>Producto Elimnado</h2>'; 
   else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
@@ -190,9 +182,9 @@ btnListInver.addEventListener('click', () => {
 const btnModify = document.getElementById('btnModify');
 btnModify.addEventListener('click', () => {
   const nombre = document.getElementById('Nombre').value;
-  const precio = document.getElementById('Precio').value;
-  const cantidad = document.getElementById('Cantidad').value;
-  const codigo = document.getElementById('Codigo').value;
+  const precio = parseFloat(document.getElementById('Precio').value);
+  const cantidad = parseInt(document.getElementById('Cantidad').value);
+  const codigo = parseInt(document.getElementById('Codigo').value);
   const modificacion = inventario.modificar(nombre, precio, cantidad, codigo);
   if (modificacion === true) document.getElementById('detalles').innerHTML = '<h2>Producto modificado</h2>' + inventario.buscarProducto(codigo).infoHtml();
   else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
