@@ -1,28 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!--Elaborado por Aldo Eduardo Valdez Gutierrez-->
-</head>
-<body>
-    <label for="txtNombre">Nombre:</label> <input id="Nombre" type="text">
-    <label for="txtPrecio">Precio: $</label> <input id="Precio" type="number">
-    <label for="txtCantidad">Cantidad:</label> <input id="Cantidad" type="number">
-    <label for="txtCodigo">Codigo:</label> <input id="Codigo" type="number">
-    <button id="btnAdd">Agregar producto</button>
-    <button type="reset" id="btnClean">Limpiar</button>
-    <button id="btnDelete">Eliminar producto</button>
-    <button id="btnList">Listar productos</button>
-    <button id="btnListInver">Listar productos inverso</button>
-    <button id="btnModify">Modificar producto</button>
-    <button id="btnSearch">Buscar producto</button>
-    <div id=""></div>
-    <div id="detalles"></div>
-
-<script>
 class Producto {
   constructor (codigo, nombre, precio, cantidad) {
     this.codigo = Number(codigo);
@@ -158,7 +133,7 @@ const btnDelete = document.getElementById('btnDelete');
 btnDelete.addEventListener('click', () => {
   const codigo = document.getElementById('Codigo').value;
   const eliminar = inventario.eliminar(codigo);
-  if (eliminar) document.getElementById('detalles').innerHTML = '<h2>Producto Eliminado</h2>';
+  if (eliminar) document.getElementById('detalles').innerHTML = '<h2>Producto Elimnado</h2>';
   else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
 });
 
@@ -179,7 +154,7 @@ btnModify.addEventListener('click', () => {
   const cantidad = document.getElementById('Cantidad').value;
   const codigo = document.getElementById('Codigo').value;
   const modificacion = inventario.modificar(nombre, precio, cantidad, codigo);
-  if (modificacion) document.getElementById('detalles').innerHTML = '<h2>Producto modificado</h2>' + inventario.buscar(codigo, 1).infoHtml();
+  if (modificacion) document.getElementById('detalles').innerHTML = '<h2>Producto modificado</h2>' + inventario.buscar(codigo).infoHtml();
   else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
 });
 
@@ -190,7 +165,3 @@ btnSearch.addEventListener('click', () => {
   if (producto != null) document.getElementById('detalles').innerHTML = producto.infoHtml();
   else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
 });
-
-</script>
-</body>
-</html>
