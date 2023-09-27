@@ -25,10 +25,10 @@
 <script>
 class Producto {
   constructor (codigo, nombre, precio, cantidad) {
-    this.codigo = codigo;
+    this.codigo = Number(codigo);
     this.nombre = nombre;
-    this.precio = precio;
-    this.cantidad = cantidad;
+    this.precio = Number(precio);
+    this.cantidad = Number(cantidad);
   }
 
   info () {
@@ -50,37 +50,41 @@ class Inventario {
     this.productos = [];
   }
 
-  checarCodigo (codigo) {
-    for (let i = 0; i < this.productos.length; i++) {
-      if (this.productos[i].codigo === codigo) {
-        return true;
-      }
+  buscarIndice (codigo) {
+  let menor = 0;
+  let mayor = this.productos.length - 1;
+  while (menor <= mayor) {
+    let puntoMedio =Math.floor( menor + (mayor - menor) / 2);
+    if (this.productos[puntoMedio].codigo == codigo) {
+      return puntoMedio;
+    } else if (codigo < this.productos[puntoMedio].codigo) {
+      mayor = puntoMedio - 1;
+    } else {
+      menor = puntoMedio + 1;
     }
-    return false;
   }
-
-  buscarIndex (codigo) {
-    for (let i = 0; i < this.productos.length; i++) {
-      if (this.productos[i].codigo === codigo) {
-        return i;
-      }
-    }
-    return null;
-  }
+  return -1;
+}
 
   buscarProducto (codigo) {
-    for (let i = 0; i < this.productos.length; i++) {
-      if (this.productos[i].codigo === codigo) {
-        return this.productos[i];
-      }
+  let menor = 0;
+  let mayor = this.productos.length - 1;
+  while (menor <= mayor) {
+    let puntoMedio = Math.floor( menor + (mayor - menor) / 2);
+    if (this.productos[puntoMedio].codigo == codigo) {
+      return this.productos[puntoMedio];
+    } else if (codigo < this.productos[puntoMedio].codigo) {
+      mayor = puntoMedio - 1;
+    } else {
+      menor = puntoMedio + 1;
     }
-    return null;
   }
-
+  return null;
+}
   agregar(producto) {
-  if (!this.checarCodigo(producto.codigo)) {
     if (this.productos.length === 0) {
       this.productos.push(producto);
+      return true;
     } else {
       let pos = 0;
       do {
@@ -97,9 +101,6 @@ class Inventario {
       this.productos.push(producto);
     }
     return true;
-  } else {
-    return false;
-  }
 }
 
   eliminar (codigo) {
@@ -118,8 +119,8 @@ class Inventario {
   }
 
   modificar (nombre, precio, cantidad, codigo) {
-    if (this.checarCodigo(codigo)) {
-      const i = this.buscarIndex(codigo);
+    const indice = this.buscarIndex(codigo);
+    if (indice != -1) {
       this.productos[i].nombre = nombre;
       this.productos[i].precio = precio;
       this.productos[i].cantidad = cantidad;
@@ -173,7 +174,7 @@ const btnDelete = document.getElementById('btnDelete');
 btnDelete.addEventListener('click', () => {
   const codigo = document.getElementById('Codigo').value;
   const eliminar = inventario.eliminar(codigo);
-  if (eliminar === true) document.getElementById('detalles').innerHTML = '<h2>Producto Elimnado</h2>'; 
+  if (eliminar) document.getElementById('detalles').innerHTML = '<h2>Producto Elimnado</h2>'; 
   else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
 });
 
@@ -194,7 +195,7 @@ btnModify.addEventListener('click', () => {
   const cantidad = document.getElementById('Cantidad').value;
   const codigo = document.getElementById('Codigo').value;
   const modificacion = inventario.modificar(nombre, precio, cantidad, codigo);
-  if (modificacion === true) document.getElementById('detalles').innerHTML = '<h2>Producto modificado</h2>' + inventario.buscarProducto(codigo).infoHtml();
+  if (modificacion) document.getElementById('detalles').innerHTML = '<h2>Producto modificado</h2>' + inventario.buscarProducto(codigo).infoHtml();
   else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
 });
 
