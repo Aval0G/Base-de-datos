@@ -29,6 +29,7 @@ class Producto {
     this.nombre = nombre;
     this.precio = Number(precio);
     this.cantidad = Number(cantidad);
+    this.siguiente = null;
   }
 
   info () {
@@ -47,63 +48,48 @@ class Producto {
 
 class Inventario {
   constructor () {
-    this.productos = [];
+    this.primero = null;
+    this.ultimo = null;
   }
 
   buscar (codigo, factor) {
-    let menor = 0;
-    let mayor = this.productos.length - 1;
-    while (menor <= mayor) {
-      const puntoMedio = Math.floor(menor + (mayor - menor) / 2);
-      if (this.productos[puntoMedio].codigo == codigo) {
-        if (factor == 1) return this.productos[puntoMedio];
-        else if (factor == 2) return puntoMedio;
-      } else if (codigo < this.productos[puntoMedio].codigo) {
-        mayor = puntoMedio - 1;
-      } else {
-        menor = puntoMedio + 1;
+    let actual = this.primero;
+    let anterior = null;
+    while (actual != null) {
+      if (actual.codigo == codigo) {
+        if (factor == 1)return actual;
+        else return anterior;
       }
+      anterior = actual;
+      actual = actual.siguiente;
     }
-    if (factor == 1) return null;
-    else if (factor == 2) return -1;
   }
 
-  agregar (producto) {
-    if (this.productos.length === 0) {
-      this.productos.push(producto);
+  agregar (nuevo) {
+    if (this.primero == null) {
+      this.primero = nuevo;
+      this.ultimo = nuevo;
     } else {
-      let pos = 0;
-      while (pos < this.productos.length && producto.codigo >= this.productos[pos].codigo) {
-        pos++;
-      }
-
-      for (let i = this.productos.length; i > pos; i--) {
-        this.productos[i] = this.productos[i - 1];
-      }
-
-      this.productos[pos] = producto;
+      this.ultimo.siguiente = nuevo;
+      this.ultimo = nuevo;
     }
   }
-
+    
   eliminar (codigo) {
-    const index = this.buscar(codigo, 2);
-    if (index != -1) {
-      for (let i = index; i < this.productos.length - 1; i++) {
-        this.productos[i] = this.productos[i + 1];
-      }
-      this.productos.pop();
-      return true;
-    } else {
-      return false;
-    }
+    let eliminar = this.buscar(codigo, 1);
+    let guardado = eliminar;
+    let anterior = this.buscar(codigo, 2);
+    anterior = eliminar.siguiente;
+    eliminar = null;
+    return guardado;
   }
 
   modificar (nombre, precio, cantidad, codigo) {
-    const indice = this.buscar(codigo, 2);
-    if (indice != -1) {
-      this.productos[indice].nombre = nombre;
-      this.productos[indice].precio = precio;
-      this.productos[indice].cantidad = cantidad;
+      let modificar = this.buscar(codigo, 1);
+      if (modificar != null) {
+      modificar.nombre = nombre;
+      modificar.precio = precio;
+      modificar.cantidad = cantidad;
       return true;
     } else {
       return false;
@@ -112,18 +98,16 @@ class Inventario {
 
   listar () {
     let html = '';
-    for (let i = 0; i < this.productos.length; i++) {
-      html += this.productos[i].infoHtml();
+    let actual = this.primero;
+    while (actual != null) {
+      html += actual.infoHtml();
+      actual = actual.siguiente;
     }
     return html;
   }
 
   listarInverso () {
     let html = '';
-    for (let i = this.productos.length - 1; i >= 0; i--) {
-      html += this.productos[i].infoHtml();
-    }
-    return html;
   }
 }
 
@@ -156,10 +140,9 @@ btnClean.addEventListener('click', () => {
 
 const btnDelete = document.getElementById('btnDelete');
 btnDelete.addEventListener('click', () => {
-  const codigo = document.getElementById('Codigo').value;
-  const eliminar = inventario.eliminar(codigo);
-  if (eliminar) document.getElementById('detalles').innerHTML = '<h2>Producto Eliminado</h2>';
-  else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
+  const codigo = document.getElemenById('Codigo').value;
+  if (inventario.eliminar(codigo) != null) document.getElementById('detalles').innerHTML = '<h2>Producto Eliminado</h2>';
+  else {document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
 });
 
 const btnList = document.getElementById('btnList');
