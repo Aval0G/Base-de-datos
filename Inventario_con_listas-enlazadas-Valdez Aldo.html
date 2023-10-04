@@ -12,6 +12,7 @@
     <label for="txtPrecio">Precio: $</label> <input id="Precio" type="number">
     <label for="txtCantidad">Cantidad:</label> <input id="Cantidad" type="number">
     <label for="txtCodigo">Codigo:</label> <input id="Codigo" type="number">
+    <label for="txtPosicion">Posicion:</label> <input id="Posicion" type="number">
     <button id="btnAdd">Agregar producto</button>
     <button type="reset" id="btnClean">Limpiar</button>
     <button id="btnDelete">Eliminar producto</button>
@@ -19,6 +20,7 @@
     <button id="btnListInver">Listar productos inverso</button>
     <button id="btnModify">Modificar producto</button>
     <button id="btnSearch">Buscar producto</button>
+    <button id="btnInsert">Insertar Posicion</button>
     <div id=""></div>
     <div id="detalles"></div>
 
@@ -79,7 +81,7 @@ class Inventario {
     let eliminar = this.buscar(codigo, 1);
     let guardado = eliminar;
     let anterior = this.buscar(codigo, 2);
-    anterior = eliminar.siguiente;
+    anterior.siguiente = eliminar.siguiente;
     eliminar = null;
     return guardado;
   }
@@ -93,6 +95,26 @@ class Inventario {
       return true;
     } else {
       return false;
+    }
+  }
+
+  insertarPosicion(producto, posicion) {
+    if (posicion == 1) {
+    console.log(posicion);
+    producto.siguiente = this.primero;
+    this.primero = producto;
+    return true;
+  }
+    let actual = this.primero;
+    let i = 1;
+    while (actual != null) {
+      if (posicion == i+1) {
+        producto.siguiente = actual.siguiente;
+        actual.siguiente = producto;
+        return true;
+      }
+      i++;
+      actual = actual.siguiente;
     }
   }
 
@@ -111,7 +133,21 @@ class Inventario {
   }
 }
 
+
+
 const inventario = new Inventario();
+
+function precargar(){
+  inventario.agregar(new Producto(1, 'Papas', 10, 100));
+  inventario.agregar(new Producto(2, 'Manzanas', 20, 200));
+  inventario.agregar(new Producto(3, 'Peras', 30, 300));
+  inventario.agregar(new Producto(4, 'Naranjas', 40, 400));
+  inventario.agregar(new Producto(5, 'Sandias', 50, 500));
+  inventario.agregar(new Producto(6, 'Melones', 60, 600));
+  inventario.agregar(new Producto(7, 'Platanos', 70, 700));
+}
+
+precargar();
 
 const btnAdd = document.getElementById('btnAdd');
 btnAdd.addEventListener('click', () => {
@@ -140,7 +176,7 @@ btnClean.addEventListener('click', () => {
 
 const btnDelete = document.getElementById('btnDelete');
 btnDelete.addEventListener('click', () => {
-  const codigo = document.getElemenById('Codigo').value;
+  const codigo = document.getElementById('Codigo').value;
   if (inventario.eliminar(codigo) != null) document.getElementById('detalles').innerHTML = '<h2>Producto Eliminado</h2>';
   else {document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
 });
@@ -172,6 +208,24 @@ btnSearch.addEventListener('click', () => {
   const producto = inventario.buscar(codigo, 1);
   if (producto != null) document.getElementById('detalles').innerHTML = producto.infoHtml();
   else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
+});
+
+const btnInsert = document.getElementById('btnInsert');
+btnInsert.addEventListener('click', () => {
+  const nombre = document.getElementById('Nombre').value;
+  const precio = document.getElementById('Precio').value;
+  const cantidad = document.getElementById('Cantidad').value;
+  const codigo = document.getElementById('Codigo').value;
+  const posicion = document.getElementById('Posicion').value
+  const producto = new Producto(codigo, nombre, precio, cantidad);;
+  const comprobar = inventario.buscar(codigo, 1);
+  if (comprobar != null) {
+    document.getElementById('detalles').innerHTML = '<h2>El producto con ese codigo ya existe</h2>';
+  } else {
+    let insertar = inventario.insertarPosicion(producto, posicion)
+    if (insertar) document.getElementById('detalles').innerHTML = producto.infoHtml();
+    else document.getElementById('detalles').innerHTML = '<h2>Esa posicion no  existe</h2>';
+  }
 });
 
 </script>
