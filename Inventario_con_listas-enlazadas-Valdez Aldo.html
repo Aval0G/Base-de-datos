@@ -20,7 +20,7 @@
     <button id="btnListInver">Listar productos inverso</button>
     <button id="btnModify">Modificar producto</button>
     <button id="btnSearch">Buscar producto</button>
-    <button id="btnInsert">Insertar Posicion</button>
+    <button id="btnInsert">Insertar Posicion</button> <input id="Insertar" type="number">
     <div id=""></div>
     <div id="detalles"></div>
 
@@ -59,7 +59,7 @@ class Inventario {
     let anterior = null;
     while (actual != null) {
       if (actual.codigo == codigo) {
-        if (factor == 1)return actual;
+        if (factor == 1) return actual;
         else return anterior;
       }
       anterior = actual;
@@ -76,19 +76,19 @@ class Inventario {
       this.ultimo = nuevo;
     }
   }
-    
+
   eliminar (codigo) {
     let eliminar = this.buscar(codigo, 1);
-    let guardado = eliminar;
-    let anterior = this.buscar(codigo, 2);
+    const guardado = eliminar;
+    const anterior = this.buscar(codigo, 2);
     anterior.siguiente = eliminar.siguiente;
     eliminar = null;
     return guardado;
   }
 
   modificar (nombre, precio, cantidad, codigo) {
-      let modificar = this.buscar(codigo, 1);
-      if (modificar != null) {
+    const modificar = this.buscar(codigo, 1);
+    if (modificar != null) {
       modificar.nombre = nombre;
       modificar.precio = precio;
       modificar.cantidad = cantidad;
@@ -98,17 +98,16 @@ class Inventario {
     }
   }
 
-  insertarPosicion(producto, posicion) {
+  insertarPosicion (producto, posicion) {
     if (posicion == 1) {
-    console.log(posicion);
-    producto.siguiente = this.primero;
-    this.primero = producto;
-    return true;
-  }
+      producto.siguiente = this.primero;
+      this.primero = producto;
+      return true;
+    }
     let actual = this.primero;
     let i = 1;
     while (actual != null) {
-      if (posicion == i+1) {
+      if (posicion == i + 1) {
         producto.siguiente = actual.siguiente;
         actual.siguiente = producto;
         return true;
@@ -129,15 +128,22 @@ class Inventario {
   }
 
   listarInverso () {
-    let html = '';
+    return this._listarInverso(this.primero);
+  }
+
+  _listarInverso (nodo) {
+    if (nodo != null) {
+      const html = '' + this._listarInverso(nodo.siguiente);
+      return html + nodo.infoHtml();
+    } else {
+      return '';
+    }
   }
 }
 
-
-
 const inventario = new Inventario();
 
-function precargar(){
+function precargar () {
   inventario.agregar(new Producto(1, 'Papas', 10, 100));
   inventario.agregar(new Producto(2, 'Manzanas', 20, 200));
   inventario.agregar(new Producto(3, 'Peras', 30, 300));
@@ -172,13 +178,14 @@ btnClean.addEventListener('click', () => {
   document.getElementById('Cantidad').value = '';
   document.getElementById('Codigo').value = '';
   document.getElementById('detalles').innerHTML = '';
+  document.getElementById('Insertar').value = '';
 });
 
 const btnDelete = document.getElementById('btnDelete');
 btnDelete.addEventListener('click', () => {
   const codigo = document.getElementById('Codigo').value;
   if (inventario.eliminar(codigo) != null) document.getElementById('detalles').innerHTML = '<h2>Producto Eliminado</h2>';
-  else {document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
+  else { document.getElementById('detalles').innerHTML = '<h2>El producto no existe</h2>'; }
 });
 
 const btnList = document.getElementById('btnList');
@@ -216,13 +223,13 @@ btnInsert.addEventListener('click', () => {
   const precio = document.getElementById('Precio').value;
   const cantidad = document.getElementById('Cantidad').value;
   const codigo = document.getElementById('Codigo').value;
-  const posicion = document.getElementById('Posicion').value
-  const producto = new Producto(codigo, nombre, precio, cantidad);;
+  const posicion = document.getElementById('Posicion').value;
+  const producto = new Producto(codigo, nombre, precio, cantidad);
   const comprobar = inventario.buscar(codigo, 1);
   if (comprobar != null) {
     document.getElementById('detalles').innerHTML = '<h2>El producto con ese codigo ya existe</h2>';
   } else {
-    let insertar = inventario.insertarPosicion(producto, posicion)
+    const insertar = inventario.insertarPosicion(producto, posicion);
     if (insertar) document.getElementById('detalles').innerHTML = producto.infoHtml();
     else document.getElementById('detalles').innerHTML = '<h2>Esa posicion no  existe</h2>';
   }
