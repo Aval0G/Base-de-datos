@@ -7,7 +7,7 @@ class Base {
   }
 
   info () {
-    return `Base ${this.nombre} Duracion desde la base anterior ${this.minutos} minutos\n`;
+    return `Base ${this.nombre} duracion desde la base anterior ${this.minutos} minutos\n`;
   }
 }
 
@@ -130,10 +130,10 @@ rutas.agregar(soriana);
 const Dif = new Base('Dif', 5);
 rutas.agregar(Dif);
 
-console.log(rutas.listar());
-console.log(rutas.listarInverso());
+console.log('*Listado de rutas\n' + rutas.listar());
+console.log('*Listado de rutas al inverso\n' + rutas.listarInverso());
 rutas.eliminar('Soriana');
 const reyColiman = new Base('Rey coliman', 35);
 rutas.agregar(reyColiman);
-console.log(rutas.crearRuta('UdeC', 1, 3));
-console.log(rutas.crearRuta('Rey coliman', 4, 12));
+console.log('*Rutas desde UdeC desde la 1 hasta las 3\n' + rutas.crearRuta('UdeC', 1, 3));
+console.log('*Rutas desde Rey Coliman desde las 4 hasta las 12\n' + rutas.crearRuta('Rey coliman', 4, 12));
