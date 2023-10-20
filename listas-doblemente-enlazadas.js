@@ -31,7 +31,7 @@ class LinkedList {
   buscarDato (dato) {
     let actual = this.primero;
     while (actual != null) {
-      if (actual.dato === dato) {
+      if (actual === dato) {
         return actual;
       }
       actual = actual.siguiente;
