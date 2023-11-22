@@ -1,3 +1,6 @@
+import { readString } from './keyboard.mjs';
+import { Menu, opcionesArbolBinario } from './menu_de_prueba.mjs';
+
 class Nodo {
   constructor (caracter) {
     this.caracter = caracter;
@@ -156,6 +159,8 @@ class ExpresionAritmetica {
     return this.recorridoPostorder(this.arbol);
   }
 }
+
+/*
 // Ejemplo de uso con Inorder
 const expresionInorder = '5+3*4';
 const expresionInorder2 = '5+3*4/2';
@@ -180,7 +185,6 @@ console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPo
 console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder4));
 console.log('Resultado:', arbolExpresionInorder.resolver());
 
-
 // Ejemplo de uso con Preorder
 const expresionPreorder = '+5*34';
 const arbolExpresionPreorder = new ExpresionAritmetica();
@@ -196,3 +200,89 @@ arbolExpresionPostorder.construirArbolDesdePostorder(expresionPostorder);
 
 console.log('\nExpresión en Postorder:', expresionPostorder);
 console.log('Resultado:', arbolExpresionPostorder.resolver());
+*/
+
+// Inicio del menu
+
+class App {
+  constructor () {
+    this.arbol = new ExpresionAritmetica();
+    this.expresion = '';
+  }
+
+  start () {
+    const menu = new Menu(opcionesArbolBinario);
+    let selected = 0;
+    console.log('Seleccione una opcion para calcular la expresion');
+    do {
+      selected = menu.getselected();
+      this.doSelected(selected);
+    } while (selected !== '4');
+  }
+
+  doSelected (selected) {
+    switch (selected) {
+      case '1':
+        this.InorderArbolBinario();
+        break;
+      case '2':
+        this.ResolverPreorder();
+        break;
+      case '3':
+        this.ResolverPostorder();
+        break;
+      case '4':
+        console.log('Adios');
+        break;
+      default:
+        console.log('Opcion invalida');
+        break;
+    }
+  }
+
+  InorderArbolBinario () {
+    console.clear();
+    console.log('[      Inorder a Arbol Binario      ]');
+    this.expresion = (readString('Ingrese la expresion en Inorder: '));
+    if (this.expresion !== '') {
+    console.log('Expresion convertida en PostOrder', this.arbol.obtenerPostorderDesdeInorder(this.expresion));
+    console.log('Expresion convertida en Preorder', this.arbol.obtenerPreorderDesdeInorder(this.expresion));
+    console.log('Resultado:', this.arbol.resolver());
+    readString('Presione enter para continuar');
+    } else {
+    console.log('No ingreso ninguna expresion');
+    readString('Presione enter para continuar');
+    }
+  }
+
+  ResolverPreorder () {
+    console.clear();
+    console.log('[      Resolver Preorder      ]');
+    this.expresion = readString('Ingrese la expresion en Preorder: ');
+    if (this.expresion !== '') {
+    this.arbol.construirArbolDesdePreorder(this.expresion);
+    console.log('Resultado:', this.arbol.resolver());
+    readString('Presione enter para continuar');
+    } else {
+    console.log('No ingreso ninguna expresion');
+    readString('Presione enter para continuar');
+    }
+  }
+
+  ResolverPostorder () {
+    console.clear();
+    console.log('Resolver Postorder');
+    this.expresion = readString('Ingrese la expresion en Postorder: ');
+    if (this.expresion !== '') {
+    this.arbol.construirArbolDesdePostorder(this.expresion);
+    console.log('Resultado:', this.arbol.resolver());
+    readString('Presione enter para continuar');
+    } else {
+    console.log('No ingreso ninguna expresion');
+    readString('Presione enter para continuar');
+    }
+  }
+}
+
+const expresionAritmeticaApp = new App();
+expresionAritmeticaApp.start();
