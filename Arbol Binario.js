@@ -73,6 +73,15 @@ class ExpresionAritmetica {
     this.arbol = pila.pop();
   }
 
+  dibujarArbol(nodo, nivel = 0) {
+    if (nodo === null) {
+      return;
+    }
+    this.dibujarArbol(nodo.hiDer, nivel + 1);
+    console.log(' '.repeat(nivel * 4) + nodo.caracter);
+    this.dibujarArbol(nodo.hiIzq, nivel + 1);
+  }
+
   construirArbolDesdePostorder (postorder) {
     const pila = [];
     for (const caracter of postorder) {
@@ -145,15 +154,15 @@ class ExpresionAritmetica {
     return resultado;
   }
 
-recorridoPostorder (nodo) {
-  let resultado = '';
-  if (nodo !== null) {
-    resultado += this.recorridoPostorder(nodo.hiIzq);
-    resultado += this.recorridoPostorder(nodo.hiDer);
-    resultado += nodo.caracter;
+  recorridoPostorder (nodo) {
+    let resultado = '';
+    if (nodo !== null) {
+      resultado += this.recorridoPostorder(nodo.hiIzq);
+      resultado += this.recorridoPostorder(nodo.hiDer);
+      resultado += nodo.caracter;
+    }
+    return resultado;
   }
-  return resultado;
-}
 
   obtenerPreorderDesdeInorder (inorder) {
     this.construirArbolDesdeInorder(inorder);
@@ -173,7 +182,7 @@ class App {
     this.arbol = new ExpresionAritmetica();
     this.expresion = '';
   }
-
+ 
   start () {
     const menu = new Menu(opcionesArbolBinario);
     let selected = 0;
@@ -209,13 +218,15 @@ class App {
     console.log('[      Inorder a Arbol Binario      ]');
     this.expresion = (readString('Ingrese la expresion en Inorder: '));
     if (this.expresion !== '') {
-    console.log('Expresion convertida en Preorder', this.arbol.obtenerPreorderDesdeInorder(this.expresion));
-    console.log('Expresion convertida en PostOrder', this.arbol.obtenerPostorderDesdeInorder(this.expresion));
-    console.log('Resultado:', this.arbol.resolver());
-    readString('Presione enter para continuar');
+      this.arbol.construirArbolDesdeInorder(this.expresion);
+      this.arbol.dibujarArbol(this.arbol.arbol);
+      console.log('Expresion convertida en Preorder', this.arbol.obtenerPreorderDesdeInorder(this.expresion));
+      console.log('Expresion convertida en PostOrder', this.arbol.obtenerPostorderDesdeInorder(this.expresion));
+      console.log('Resultado:', this.arbol.resolver());
+      readString('Presione enter para continuar');
     } else {
-    console.log('No ingreso ninguna expresion');
-    readString('Presione enter para continuar');
+      console.log('No ingreso ninguna expresion');
+      readString('Presione enter para continuar');
     }
   }
 
@@ -224,12 +235,12 @@ class App {
     console.log('[      Resolver Preorder      ]');
     this.expresion = readString('Ingrese la expresion en Preorder: ');
     if (this.expresion !== '') {
-    this.arbol.construirArbolDesdePreorder(this.expresion);
-    console.log('Resultado:', this.arbol.resolver());
-    readString('Presione enter para continuar');
+      this.arbol.construirArbolDesdePreorder(this.expresion);
+      console.log('Resultado:', this.arbol.resolver());
+      readString('Presione enter para continuar');
     } else {
-    console.log('No ingreso ninguna expresion');
-    readString('Presione enter para continuar');
+      console.log('No ingreso ninguna expresion');
+      readString('Presione enter para continuar');
     }
   }
 
@@ -238,12 +249,12 @@ class App {
     console.log('Resolver Postorder');
     this.expresion = readString('Ingrese la expresion en Postorder: ');
     if (this.expresion !== '') {
-    this.arbol.construirArbolDesdePostorder(this.expresion);
-    console.log('Resultado:', this.arbol.resolver());
-    readString('Presione enter para continuar');
+      this.arbol.construirArbolDesdePostorder(this.expresion);
+      console.log('Resultado:', this.arbol.resolver());
+      readString('Presione enter para continuar');
     } else {
-    console.log('No ingreso ninguna expresion');
-    readString('Presione enter para continuar');
+      console.log('No ingreso ninguna expresion');
+      readString('Presione enter para continuar');
     }
   }
 }
@@ -293,4 +304,5 @@ arbolExpresionPostorder.construirArbolDesdePostorder(expresionPostorder);
 
 console.log('\nExpresión en Postorder:', expresionPostorder);
 console.log('Resultado:', arbolExpresionPostorder.resolver());
+
 */
