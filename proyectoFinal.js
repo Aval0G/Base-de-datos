@@ -4,8 +4,6 @@ import { Menu, opcionesArbolBinario } from './menu_de_prueba.mjs';
 class Nodo {
   constructor (caracter) {
     this.caracter = caracter;
-    this.siguiente = null;
-    this.anterior = null;
     this.hiIzq = null;
     this.hiDer = null;
   }
@@ -59,8 +57,8 @@ class ExpresionAritmetica {
         pila.push(new Nodo(caracter));
       } else if (this.esOperador(caracter)) {
         const nodo = new Nodo(caracter);
-        nodo.hiDer = pila.pop();
-        nodo.hiIzq = pila.pop();
+        nodo.hiIzq = pila.pop(); // Hijo izquierdo es el último elemento de la pila
+        nodo.hiDer = pila.pop(); // Hijo derecho es el penúltimo elemento de la pila
         pila.push(nodo);
       }
     }
@@ -139,15 +137,15 @@ class ExpresionAritmetica {
     return resultado;
   }
 
-  recorridoPostorder (nodo) {
-    let resultado = '';
-    if (nodo !== null) {
-      resultado += this.recorridoPostorder(nodo.hiIzq);
-      resultado += this.recorridoPostorder(nodo.hiDer);
-      resultado += nodo.caracter + ' ';
-    }
-    return resultado.trim();
+recorridoPostorder (nodo) {
+  let resultado = '';
+  if (nodo !== null) {
+    resultado += this.recorridoPostorder(nodo.hiIzq);
+    resultado += this.recorridoPostorder(nodo.hiDer);
+    resultado += nodo.caracter;
   }
+  return resultado;
+}
 
   obtenerPreorderDesdeInorder (inorder) {
     this.construirArbolDesdeInorder(inorder);
@@ -159,48 +157,6 @@ class ExpresionAritmetica {
     return this.recorridoPostorder(this.arbol);
   }
 }
-
-/*
-// Ejemplo de uso con Inorder
-const expresionInorder = '5+3*4';
-const expresionInorder2 = '5+3*4/2';
-const expresionInorder3 = '5+3*4/2-1';
-const expresionInorder4 = '5+3*4/2-1+2';
-const arbolExpresionInorder = new ExpresionAritmetica();
-
-console.log('Expresión en Inorder:', expresionInorder);
-console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder));
-console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder));
-console.log('Resultado:', arbolExpresionInorder.resolver());
-console.log('Expresión en Inorder 2:', expresionInorder2);
-console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder2));
-console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder2));
-console.log('Resultado:', arbolExpresionInorder.resolver());
-console.log('Expresión en Inorder 3:', expresionInorder3);
-console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder3));
-console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder3));
-console.log('Resultado:', arbolExpresionInorder.resolver());
-console.log('Expresión en Inorder 4:', expresionInorder4);
-console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder4));
-console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder4));
-console.log('Resultado:', arbolExpresionInorder.resolver());
-
-// Ejemplo de uso con Preorder
-const expresionPreorder = '+5*34';
-const arbolExpresionPreorder = new ExpresionAritmetica();
-arbolExpresionPreorder.construirArbolDesdePreorder(expresionPreorder);
-
-console.log('\nExpresión en Preorder:', expresionPreorder);
-console.log('Resultado:', arbolExpresionPreorder.resolver());
-
-// Ejemplo de uso con Postorder
-const expresionPostorder = '534*+';
-const arbolExpresionPostorder = new ExpresionAritmetica();
-arbolExpresionPostorder.construirArbolDesdePostorder(expresionPostorder);
-
-console.log('\nExpresión en Postorder:', expresionPostorder);
-console.log('Resultado:', arbolExpresionPostorder.resolver());
-*/
 
 // Inicio del menu
 
@@ -245,8 +201,8 @@ class App {
     console.log('[      Inorder a Arbol Binario      ]');
     this.expresion = (readString('Ingrese la expresion en Inorder: '));
     if (this.expresion !== '') {
-    console.log('Expresion convertida en PostOrder', this.arbol.obtenerPostorderDesdeInorder(this.expresion));
     console.log('Expresion convertida en Preorder', this.arbol.obtenerPreorderDesdeInorder(this.expresion));
+    console.log('Expresion convertida en PostOrder', this.arbol.obtenerPostorderDesdeInorder(this.expresion));
     console.log('Resultado:', this.arbol.resolver());
     readString('Presione enter para continuar');
     } else {
@@ -286,3 +242,54 @@ class App {
 
 const expresionAritmeticaApp = new App();
 expresionAritmeticaApp.start();
+
+// Fin del menu
+
+/*[      Inorder a Arbol Binario      ]
+Ingrese la expresion en Inorder: 7*5-3+2*4/2
+Expresion convertida en Preorder +-*753/*242
+Expresion convertida en PostOrder 75*3-24*2/+
+
+*/
+
+/*
+// Ejemplo de uso con Inorder
+const expresionInorder = '5+3*4';
+const expresionInorder2 = '5+3*4/2';
+const expresionInorder3 = '5+3*4/2-1';
+const expresionInorder4 = '5+3*4/2-1+2';
+const arbolExpresionInorder = new ExpresionAritmetica();
+
+console.log('Expresión en Inorder:', expresionInorder);
+console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder));
+console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder));
+console.log('Resultado:', arbolExpresionInorder.resolver());
+console.log('Expresión en Inorder 2:', expresionInorder2);
+console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder2));
+console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder2));
+console.log('Resultado:', arbolExpresionInorder.resolver());
+console.log('Expresión en Inorder 3:', expresionInorder3);
+console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder3));
+console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder3));
+console.log('Resultado:', arbolExpresionInorder.resolver());
+console.log('Expresión en Inorder 4:', expresionInorder4);
+console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder4));
+console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder4));
+console.log('Resultado:', arbolExpresionInorder.resolver());
+
+// Ejemplo de uso con Preorder
+const expresionPreorder = '+5*34';
+const arbolExpresionPreorder = new ExpresionAritmetica();
+arbolExpresionPreorder.construirArbolDesdePreorder(expresionPreorder);
+
+console.log('\nExpresión en Preorder:', expresionPreorder);
+console.log('Resultado:', arbolExpresionPreorder.resolver());
+
+// Ejemplo de uso con Postorder
+const expresionPostorder = '534*+';
+const arbolExpresionPostorder = new ExpresionAritmetica();
+arbolExpresionPostorder.construirArbolDesdePostorder(expresionPostorder);
+
+console.log('\nExpresión en Postorder:', expresionPostorder);
+console.log('Resultado:', arbolExpresionPostorder.resolver());
+*/
