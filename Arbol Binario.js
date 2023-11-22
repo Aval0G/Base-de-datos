@@ -8,7 +8,6 @@ import { Menu, opcionesArbolBinario } from './menu_de_prueba.mjs';
  * @param {Nodo} hiDer - Hijo derecho de un nodo
  * @description La clase tiene un caracter siempre, pero puede tener uno o dos hijos
 */
-
 class Nodo {
   constructor (caracter) {
     this.caracter = caracter;
@@ -17,13 +16,29 @@ class Nodo {
   }
 }
 
-class ExpresionAritmetica {
+/**
+ * Clase que representa el arbol
+ * @param {Nodo} arbol - Raiz del arbol
+ * @description La clase tiene el arbol y todos los metodos para construirlo y resolverlo
+ */
+class ArbolBinario {
   constructor () {
     this.arbol = null;
   }
 
+  /**
+   * Funcion para construir el arbol desde inorder
+   * @param {string} inorder - Expresion en Inorder
+   * @description La funcion recorre la expresion caracter por caracter y va construyendo el arbol con una pila de nodos y una pila de operadores
+  */
   construirArbolDesdeInorder (inorder) {
+    /**
+     * Pila para guardar los nodos
+     */
     const pilaNodos = [];
+    /**
+     * Pila para guardar los operadores
+     */
     const pilaOperadores = [];
     for (const caracter of inorder) {
       if (this.esDigito(caracter)) {
@@ -57,7 +72,15 @@ class ExpresionAritmetica {
     this.arbol = pilaNodos.pop();
   }
 
+  /**
+   * Funcion para construir el arbol desde preorder
+   * @param {string} preorder - Expresion en Preorder
+   * @description La funcion recorre la expresion caracter por caracter y va construyendo el arbol con una pila de nodos
+   */
   construirArbolDesdePreorder (preorder) {
+    /**
+     * Pila donde se guarda el arbol
+     */
     const pila = [];
     for (let i = preorder.length - 1; i >= 0; i--) {
       const caracter = preorder[i];
@@ -65,15 +88,15 @@ class ExpresionAritmetica {
         pila.push(new Nodo(caracter));
       } else if (this.esOperador(caracter)) {
         const nodo = new Nodo(caracter);
-        nodo.hiIzq = pila.pop(); // Hijo izquierdo es el último elemento de la pila
-        nodo.hiDer = pila.pop(); // Hijo derecho es el penúltimo elemento de la pila
+        nodo.hiIzq = pila.pop();
+        nodo.hiDer = pila.pop();
         pila.push(nodo);
       }
     }
     this.arbol = pila.pop();
   }
 
-  dibujarArbol(nodo, nivel = 0) {
+  dibujarArbol (nodo, nivel = 0) {
     if (nodo === null) {
       return;
     }
@@ -82,7 +105,15 @@ class ExpresionAritmetica {
     this.dibujarArbol(nodo.hiIzq, nivel + 1);
   }
 
+  /**
+   * Funcion para construir el arbol desde postorder
+   * @param {string} postorder - Expresion en Postorder
+   * @description La funcion recorre la expresion caracter por caracter y va construyendo el arbol con una pila de nodos
+  */
   construirArbolDesdePostorder (postorder) {
+    /**
+     * Pila donde se guarda el arbol
+     */
     const pila = [];
     for (const caracter of postorder) {
       if (this.esDigito(caracter)) {
@@ -97,10 +128,19 @@ class ExpresionAritmetica {
     this.arbol = pila.pop();
   }
 
+  /**
+   * Funcion que llama a la funcion recursiva para resolver el Arbol
+   * @returns {number} - Resultado de la expresion
+   */
   resolver () {
     return this.resolverArbol(this.arbol);
   }
 
+  /**
+   * Funcion recursiva que resuelve el arbol
+   * @param {Nodo} nodo - Nodo del arbol
+   * @returns {number} - Resultado de la expresion
+   */
   resolverArbol (nodo) {
     if (nodo !== null) {
       if (this.esDigito(nodo.caracter)) {
@@ -123,14 +163,29 @@ class ExpresionAritmetica {
     }
   }
 
+  /**
+   * Funcion que determina si un caracter es un operador
+   * @param {*} caracter caracter a evaluar
+   * @returns {boolean} - true si es un operador, false si no lo es
+   */
   esOperador (caracter) {
     return ['+', '-', '*', '/'].includes(caracter);
   }
 
+  /**
+   * Funcion que determina si un caracter es un digito
+   * @param {*} caracter caracter a evaluar
+   * @returns {boolean} - true si es un digito, false si no lo es
+   */
   esDigito (caracter) {
     return /^\d+$/.test(caracter);
   }
 
+  /**
+   * Funcion que determina la importancia de un operador
+   * @param {string} operador operador a evaluar
+   * @returns {number} 1 si es + o -, 2 si es * o /, 0 si no es un operador
+   */
   precedencia (operador) {
     switch (operador) {
       case '+':
@@ -144,7 +199,15 @@ class ExpresionAritmetica {
     }
   }
 
+  /**
+   * Funcion para generar el recorrido Preorder
+   * @param {*} nodo donde se empieza el recorrido
+   * @returns {string} el recorrido Preorder del arbol
+   */
   recorridoPreorder (nodo) {
+    /**
+     * Variable para guardar el recorrido
+     */
     let resultado = '';
     if (nodo !== null) {
       resultado += nodo.caracter;
@@ -154,7 +217,15 @@ class ExpresionAritmetica {
     return resultado;
   }
 
+  /**
+   * Funcion para generar el recorrido Postorder
+   * @param {*} nodo donde empiezza el recorrido
+   * @returns {string} el recorrido Postorder del arbol
+   */
   recorridoPostorder (nodo) {
+    /**
+     * Variable para guardar el recorrido
+     */
     let resultado = '';
     if (nodo !== null) {
       resultado += this.recorridoPostorder(nodo.hiIzq);
@@ -164,11 +235,21 @@ class ExpresionAritmetica {
     return resultado;
   }
 
+  /**
+   * Funcion para obtener el recorrido Preorder desde Inorder
+   * @param {string} inorder - Expresion en Inorder
+   * @returns {string} el recorrido Preorder del arbol
+  */
   obtenerPreorderDesdeInorder (inorder) {
     this.construirArbolDesdeInorder(inorder);
     return this.recorridoPreorder(this.arbol);
   }
 
+  /**
+   * Funcion para obtener el recorrido Postorder desde Inorder
+   * @param {*} inorder Expresion en Inorder
+   * @returns {string} el recorrido Postorder del arbol
+   */
   obtenerPostorderDesdeInorder (inorder) {
     this.construirArbolDesdeInorder(inorder);
     return this.recorridoPostorder(this.arbol);
@@ -177,12 +258,23 @@ class ExpresionAritmetica {
 
 // Inicio del menu
 
+/**
+ * Clase que representa el menu
+ * @param {arbol} arbol - Arbol que se va a usar, se genera vacio
+ * @param {string} expresion - Expresion que se va a usar, se genera vacia
+ * @param {Menu} menu - Menu que se va a usar, se genera con las opciones del arbol binario en automatico
+ * @description La clase tiene un arreglo de opciones y la opcion seleccionada
+ */
 class App {
   constructor () {
-    this.arbol = new ExpresionAritmetica();
+    this.arbol = new ArbolBinario();
     this.expresion = '';
   }
- 
+
+  /**
+   * Funcion para iniciar el menu
+   * @description La funcion crea el menu y lo muestra, ademas de llamar a la funcion que selecciona los casos
+   */
   start () {
     const menu = new Menu(opcionesArbolBinario);
     let selected = 0;
@@ -193,6 +285,11 @@ class App {
     } while (selected !== '4');
   }
 
+  /**
+   * Funcion para seleccionar la opcion del menu
+   * @param {string} selected opcion seleccionada
+   * @description La funcion llama a la funcion que se selecciono
+   */
   doSelected (selected) {
     switch (selected) {
       case '1':
@@ -213,6 +310,10 @@ class App {
     }
   }
 
+  /**
+   * Funcion para resolver una expresion en Inorder
+   * @description La funcion pide una expresion en Inorder y la resuelve asi mismo da su expresion en Preorder y Postorder
+   */
   InorderArbolBinario () {
     console.clear();
     console.log('[      Inorder a Arbol Binario      ]');
@@ -230,6 +331,10 @@ class App {
     }
   }
 
+  /**
+   * Funcion para resolver una expresion en Preorder
+   * @description La funcion pide una expresion en Preorder y la resuelve
+   */
   ResolverPreorder () {
     console.clear();
     console.log('[      Resolver Preorder      ]');
@@ -244,6 +349,10 @@ class App {
     }
   }
 
+  /**
+   * Funcion para resolver una expresion en Postorder
+   * @description La funcion pide una expresion en Postorder y la resuelve
+   */
   ResolverPostorder () {
     console.clear();
     console.log('Resolver Postorder');
@@ -259,50 +368,11 @@ class App {
   }
 }
 
-const expresionAritmeticaApp = new App();
-expresionAritmeticaApp.start();
-
-// Fin del menu
-
-/*
-// Ejemplo de uso con Inorder
-const expresionInorder = '5+3*4';
-const expresionInorder2 = '5+3*4/2';
-const expresionInorder3 = '5+3*4/2-1';
-const expresionInorder4 = '5+3*4/2-1+2';
-const arbolExpresionInorder = new ExpresionAritmetica();
-
-console.log('Expresión en Inorder:', expresionInorder);
-console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder));
-console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder));
-console.log('Resultado:', arbolExpresionInorder.resolver());
-console.log('Expresión en Inorder 2:', expresionInorder2);
-console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder2));
-console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder2));
-console.log('Resultado:', arbolExpresionInorder.resolver());
-console.log('Expresión en Inorder 3:', expresionInorder3);
-console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder3));
-console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder3));
-console.log('Resultado:', arbolExpresionInorder.resolver());
-console.log('Expresión en Inorder 4:', expresionInorder4);
-console.log('Expresion convertida en PostOrder', arbolExpresionInorder.obtenerPostorderDesdeInorder(expresionInorder4));
-console.log('Expresion convertida en Preorder', arbolExpresionInorder.obtenerPreorderDesdeInorder(expresionInorder4));
-console.log('Resultado:', arbolExpresionInorder.resolver());
-
-// Ejemplo de uso con Preorder
-const expresionPreorder = '+5*34';
-const arbolExpresionPreorder = new ExpresionAritmetica();
-arbolExpresionPreorder.construirArbolDesdePreorder(expresionPreorder);
-
-console.log('\nExpresión en Preorder:', expresionPreorder);
-console.log('Resultado:', arbolExpresionPreorder.resolver());
-
-// Ejemplo de uso con Postorder
-const expresionPostorder = '534*+';
-const arbolExpresionPostorder = new ExpresionAritmetica();
-arbolExpresionPostorder.construirArbolDesdePostorder(expresionPostorder);
-
-console.log('\nExpresión en Postorder:', expresionPostorder);
-console.log('Resultado:', arbolExpresionPostorder.resolver());
-
-*/
+/**
+ * Creacion de la aplicacion
+ */
+const ArbolBinarioApp = new App();
+/**
+ * Inicio de la aplicacion
+ */
+ArbolBinarioApp.start();
