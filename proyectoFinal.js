@@ -1,6 +1,14 @@
 import { readString } from './keyboard.mjs';
 import { Menu, opcionesArbolBinario } from './menu_de_prueba.mjs';
 
+/**
+ * Clase que representa un nodo de un arbol binario
+ * @param {string} caracter - Caracter que puede ser un signo de operacion o un digito
+ * @param {Nodo} hiIzq - Hijo izquierdo de un nodo
+ * @param {Nodo} hiDer - Hijo derecho de un nodo
+ * @description La clase tiene un caracter siempre, pero puede tener uno o dos hijos
+*/
+
 class Nodo {
   constructor (caracter) {
     this.caracter = caracter;
@@ -244,13 +252,6 @@ const expresionAritmeticaApp = new App();
 expresionAritmeticaApp.start();
 
 // Fin del menu
-
-/*[      Inorder a Arbol Binario      ]
-Ingrese la expresion en Inorder: 7*5-3+2*4/2
-Expresion convertida en Preorder +-*753/*242
-Expresion convertida en PostOrder 75*3-24*2/+
-
-*/
 
 /*
 // Ejemplo de uso con Inorder
